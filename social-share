@@ -1,6 +1,3 @@
-<!-- Social Share -->
-
-<script>
 document.addEventListener('DOMContentLoaded', function() {
     // Get all the share buttons
     const shareButtons = document.querySelectorAll('.sl-share-button');
@@ -38,5 +35,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-</script>
