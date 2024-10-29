@@ -1,3 +1,6 @@
+
+console.log("Region Count Script Running");
+
 document.addEventListener("DOMContentLoaded", function () {
     const hotels = document.querySelectorAll("[sl='item']");
     const validRegions = [
