@@ -1,44 +1,28 @@
-
-console.log("Region Count Script Running");
-
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("Region Count Script Running");
+
     const hotels = document.querySelectorAll("[sl='item']");
-    const validRegions = [
-        "Alentejo",
-        "Algarve",
-        "Azores",
-        "Central",
-        "Lisbon",
-        "Madeira",
-        "North & Douro",
-        "Porto"
-    ];
     const regionHotels = {};
 
     hotels.forEach((hotel) => {
-        const regionElement = hotel.querySelector("[sl-type='region']");
-        const hotelName = hotel.querySelector("div:first-child").textContent.trim();
+        const regionElement = hotel.querySelector("[sl-region]");
+        if (regionElement) {
+            const region = regionElement.getAttribute("sl-region").trim();
+            const hotelName = regionElement.textContent.trim();
 
-        if (regionElement && hotelName) {
-            const region = regionElement.textContent.trim();
-
-            if (validRegions.includes(region)) {
-                if (!regionHotels[region]) {
-                    regionHotels[region] = [];
-                }
-                regionHotels[region].push(hotelName);
-            } else {
-                console.warn(`Unrecognized region found: ${region}`);
+            if (!regionHotels[region]) {
+                regionHotels[region] = [];
             }
+            regionHotels[region].push(hotelName);
         } else {
-            console.warn("Missing region or hotel name for an item.");
+            console.warn("Missing region for a hotel item.");
         }
     });
 
-    // Display hotels by region
+    // Display the grouped hotels by region
     console.log("Hotels grouped by region:", regionHotels);
 
-    // Calculate and display counts
+    // Calculate and display counts by region
     const regionCounts = {};
     for (const region in regionHotels) {
         regionCounts[region] = regionHotels[region].length;
