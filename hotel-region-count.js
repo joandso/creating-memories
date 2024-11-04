@@ -29,4 +29,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     console.log("Accurate Hotel Counts by Region:", regionCounts);
+
+    // Auto-fill the form field for "Madeira"
+    const madeiraCount = regionCounts["Madeira"];
+    const madeiraInput = document.getElementById("Number-of-Hotels-Input-Text-Field-Madeira");
+    if (madeiraInput && madeiraCount !== undefined) {
+        madeiraInput.value = madeiraCount; // Set the count for Madeira
+        console.log(`Auto-filled Madeira count: ${madeiraCount}`);
+    } else {
+        console.warn("Madeira input field not found or count is missing.");
+    }
 });
