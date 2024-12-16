@@ -24,14 +24,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 case 'email':
                     url = `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(shareText + ' ' + shareURL)}`;
                     break;
-                case 'pinterest':
-                    if (imageUrl) {
-                        url = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareURL)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(shareText)}`;
-                    } else {
-                        console.error('Pinterest requires a valid image URL in the "data-image" attribute.');
-                        return; // Exit if no image URL is provided
-                    }
-                    break;
+               case 'pinterest':
+    const imageUrl = this.getAttribute('data-image') || document.querySelector('meta[property="og:image"]').getAttribute('content');
+    if (!imageUrl) {
+        console.error('Pinterest requires a valid image URL in the "data-image" attribute or og:image meta tag.');
+        return;
+    }
+    url = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareURL)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(shareText)}`;
+    break;
+
                 default:
                     console.error(`Unsupported share platform: ${platform}`);
                     return; // Exit if the platform is not recognized
