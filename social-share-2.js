@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const platform = this.getAttribute('sl-share');
             const shareURL = window.location.href; // Current page URL
             const shareText = document.title; // Page title or custom text
-            const imageUrl = this.getAttribute('data-image') || ''; // Custom image for Pinterest or fallback
 
             let url = '';
 
@@ -18,20 +17,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 case 'facebook':
                     url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareURL)}`;
                     break;
+
                 case 'whatsapp':
                     url = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareURL)}`;
                     break;
+
                 case 'email':
                     url = `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(shareText + ' ' + shareURL)}`;
                     break;
-               case 'pinterest':
-    const imageUrl = this.getAttribute('data-image') || document.querySelector('meta[property="og:image"]').getAttribute('content');
-    if (!imageUrl) {
-        console.error('Pinterest requires a valid image URL in the "data-image" attribute or og:image meta tag.');
-        return;
-    }
-    url = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareURL)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(shareText)}`;
-    break;
+
+                case 'pinterest':
+                    // Get the image URL from the button's data-image attribute or fallback to the og:image meta tag
+                    const imageUrl = this.getAttribute('data-image') || document.querySelector('meta[property="og:image"]')?.getAttribute('content');
+                    
+                    if (!imageUrl) {
+                        console.error('Pinterest requires a valid image URL in the "data-image" attribute or og:image meta tag.');
+                        return; // Exit if no image URL is provided
+                    }
+
+                    url = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareURL)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(shareText)}`;
+                    break;
 
                 default:
                     console.error(`Unsupported share platform: ${platform}`);
