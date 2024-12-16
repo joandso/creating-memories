@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const platform = this.getAttribute('sl-share');
             const shareURL = window.location.href; // Current page URL
             const shareText = document.title; // Page title or custom text
-            const imageUrl = this.getAttribute('data-image') || ''; // Custom image for Pinterest or fallback
 
             let url = '';
 
@@ -23,14 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     break;
                 case 'email':
                     url = `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(shareText + ' ' + shareURL)}`;
-                    break;
-                case 'pinterest':
-                    if (imageUrl) {
-                        url = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareURL)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(shareText)}`;
-                    } else {
-                        console.error('Pinterest requires a valid image URL in the "data-image" attribute.');
-                        return; // Exit if no image URL is provided
-                    }
                     break;
                 default:
                     console.error(`Unsupported share platform: ${platform}`);
