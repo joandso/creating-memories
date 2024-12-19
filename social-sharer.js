@@ -9,11 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const platform = this.getAttribute('sl-share');
             const shareURL = window.location.href; // Current page URL
             const shareText = document.title; // Page title or custom text
-            let url = '';
 
-            // Check if there is an image with id="cover"
-            const coverImage = document.getElementById('cover');
-            const coverImageUrl = coverImage ? coverImage.src : ''; // Get the src of the cover image
+            let url = '';
 
             // Build the share URL based on the platform
             switch (platform) {
@@ -27,11 +24,29 @@ document.addEventListener('DOMContentLoaded', function () {
                     url = `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(shareText + ' ' + shareURL)}`;
                     break;
                 case 'pinterest':
-                    if (coverImageUrl) {
-                        url = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareURL)}&media=${encodeURIComponent(coverImageUrl)}&description=${encodeURIComponent(shareText)}`;
-                    } else {
-                        console.error('Cover image not found for Pinterest sharing.');
-                        return;
+                    // Get the cover image element
+                    const coverImage = document.getElementById('cover');
+                    if (coverImage) {
+                        const srcset = coverImage.getAttribute('srcset');
+                        let largestImageURL = coverImage.getAttribute('src'); // Default to src if srcset is unavailable
+
+                        if (srcset) {
+                            // Split the `srcset` string into individual image entries
+                            const sources = srcset.split(',').map(source => {
+                                const [url, size] = source.trim().split(' ');
+                                return { url, size: parseInt(size.replace('w', ''), 10) }; // Parse size as a number
+                            });
+
+                            // Find the largest resolution URL
+                            const largestImage = sources.reduce((largest, current) => {
+                                return current.size > largest.size ? current : largest;
+                            });
+
+                            largestImageURL = largestImage.url;
+                        }
+
+                        // Construct Pinterest share URL
+                        url = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareURL)}&media=${encodeURIComponent(largestImageURL)}&description=${encodeURIComponent(shareText)}`;
                     }
                     break;
                 default:
