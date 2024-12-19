@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Get all the share buttons
     const shareButtons = document.querySelectorAll('.sl-share-button');
 
-    // Add click event to each button
     shareButtons.forEach(button => {
         button.addEventListener('click', function () {
             // Determine the platform to share on
@@ -24,37 +23,28 @@ document.addEventListener('DOMContentLoaded', function () {
                     url = `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(shareText + ' ' + shareURL)}`;
                     break;
                 case 'pinterest':
-                    // Get the cover image element
                     const coverImage = document.getElementById('cover');
                     if (coverImage) {
                         const srcset = coverImage.getAttribute('srcset');
-                        let largestImageURL = coverImage.getAttribute('src'); // Default to src if srcset is unavailable
+                        let largestImageURL = coverImage.getAttribute('src');
 
                         if (srcset) {
-                            // Split the `srcset` string into individual image entries
                             const sources = srcset.split(',').map(source => {
                                 const [url, size] = source.trim().split(' ');
-                                return { url, size: parseInt(size.replace('w', ''), 10) }; // Parse size as a number
+                                return { url, size: parseInt(size.replace('w', ''), 10) };
                             });
-
-                            // Find the largest resolution URL
-                            const largestImage = sources.reduce((largest, current) => {
-                                return current.size > largest.size ? current : largest;
-                            });
-
+                            const largestImage = sources.reduce((largest, current) => current.size > largest.size ? current : largest);
                             largestImageURL = largestImage.url;
                         }
 
-                        // Construct Pinterest share URL
                         url = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareURL)}&media=${encodeURIComponent(largestImageURL)}&description=${encodeURIComponent(shareText)}`;
                     }
                     break;
                 default:
                     console.error(`Unsupported share platform: ${platform}`);
-                    return; // Exit if the platform is not recognized
+                    return;
             }
 
-            // Open the share URL in a new window
             if (url) {
                 window.open(url, '_blank', 'noopener,noreferrer');
             }
